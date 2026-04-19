@@ -1,0 +1,126 @@
+<!-- Spinner centralizado con fondo translúcido -->
+<div *ngIf="(!formularioCargado && visible)"
+    class="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-white bg-opacity-75"
+    style="z-index: 2000;">
+    <div class="text-center">
+        <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+            <span class="visually-hidden">Cargando...</span>
+        </div>
+        <p class="mt-3 fs-5">Cargando datos del formulario...</p>
+    </div>
+</div>
+
+<!-- Modal completo solo si ya se cargó -->
+<div *ngIf="visible && formularioCargado">
+    <div class="modal-backdrop fade show" style="z-index: 1050;"></div>
+    <div class="modal show d-block" tabindex="-1" style="z-index: 1060;">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white modal-header-sistema">
+                    <h5 class="modal-title">Editar Cita</h5>
+                    <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="Cerrar"
+                        (click)="cerrarModal()"></button>
+                </div>
+
+                <div class="modal-body">
+                    <!-- tu formulario intacto aquí -->
+                    <form (ngSubmit)="onSubmit()">
+                        <div class="row">
+                            <!-- Izquierda -->
+                            <div class="col-md-6">
+                                <!-- Paciente -->
+                                <div class="mb-3">
+                                    <label class="form-label">Paciente</label>
+                                    <ng-select [items]="pacientes" bindLabel="user.nombre" bindValue="id"
+                                        [(ngModel)]="citaForm.id_paciente" name="id_paciente" [searchable]="true"
+                                        [clearable]="false" [disabled]="citaPasada">
+                                        <ng-template ng-label-tmp let-item="item">
+                                            {{ item.user.nombre }} {{ item.user.apellidos }}
+                                        </ng-template>
+                                        <ng-template ng-option-tmp let-item="item">
+                                            {{ item.user.nombre }} {{ item.user.apellidos }}
+                                        </ng-template>
+                                    </ng-select>
+                                </div>
+                                <!-- Especialista -->
+                                <div class="mb-3">
+                                    <label class="form-label">Especialista</label>
+                                    <ng-select *ngIf="especialistasFiltrados.length > 0"
+                                        [items]="especialistasFiltrados" bindLabel="nombreCompleto" bindValue="id"
+                                        [(ngModel)]="citaForm.id_especialista" name="id_especialista"
+                                        [searchable]="true" [clearable]="false" [disabled]="citaPasada"
+                                        (change)="alCambiarEspecialista()">
+                                    </ng-select>
+                                    <div *ngIf="especialistasFiltrados.length === 0" class="form-text text-danger">
+                                        No hay especialistas disponibles para esta especialidad.
+                                    </div>
+                                </div>
+                                <small *ngIf="citaPasada" class="text-muted fst-italic">
+                                    No se puede modificar el paciente o especialista porque la cita ya ha ocurrido.
+                                </small>
+                                <!-- Fecha -->
+                                <div class="mb-3">
+                                    <label class="form-label">Fecha</label>
+                                    <input type="date" class="form-control" [(ngModel)]="citaForm.fecha" name="fecha"
+                                        (change)="alCambiarFecha()" required [disabled]="citaPasada"/>
+                                </div>
+                                <!-- Hora -->
+                                <div class="mb-3">
+                                    <label class="form-label">Hora</label>
+                                    <select class="form-select" [(ngModel)]="citaForm.hora" name="hora" required [disabled]="citaPasada">
+                                        <option *ngFor="let hora of horasDisponibles" [value]="hora">{{ hora }}</option>
+                                        <option *ngIf="horasDisponibles.length === 0" disabled>No hay horas disponibles
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Derecha -->
+                            <div class="col-md-6">
+                                <!-- Especialidad -->
+                                <div class="mb-3">
+                                    <label class="form-label">Especialidad</label>
+                                    <select class="form-select" [(ngModel)]="especialidadSeleccionada"
+                                        name="especialidad" (change)="alCambiarEspecialidad()" required
+                                        [disabled]="citaPasada">
+                                        <option *ngFor="let esp of especialidades" [value]="esp">{{ esp }}</option>
+                                    </select>
+                                </div>
+                                <!-- Tipo de cita -->
+                                <div class="mb-3">
+                                    <label class="form-label">Tipo de cita</label>
+                                    <select class="form-select" [(ngModel)]="citaForm.tipo_cita" name="tipo_cita"
+                                        required [disabled]="citaPasada">
+                                        <option value="presencial">Presencial</option>
+                                        <option value="telemática">Online</option>
+                                    </select>
+                                </div>
+                                <!-- Estado -->
+                                <div class="mb-3">
+                                    <label class="form-label">Estado</label>
+                                    <select class="form-select" [(ngModel)]="citaForm.estado" name="estado" required>
+                                        <option *ngFor="let estado of tiposEstado" [value]="estado">
+                                            {{ estado | titlecase }}
+                                        </option>
+                                    </select>
+                                </div>
+                                <!-- Comentario -->
+                                <div class="mb-3">
+                                    <label class="form-label">Comentario</label>
+                                    <textarea class="form-control" rows="3" [(ngModel)]="citaForm.comentario"
+                                        name="comentario"
+                                        placeholder="Observaciones, indicaciones, etc."></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="cerrarModal()">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" (click)="onSubmit()">Guardar cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

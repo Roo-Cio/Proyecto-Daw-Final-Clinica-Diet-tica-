@@ -1,0 +1,40 @@
+<div class="mb-3">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="text-2xl font-bold mb-0">Listado de usuarios</h2>
+        <button class="btn btn-outline-primary" (click)="nuevoUsuario()">Nuevo usuario</button>
+    </div>
+    <div class="alert alert-info small py-2">
+        <i class="bi bi-info-circle-fill me-1"></i>
+        Se muestra el listado de usuarios registrados en el sistema. Puedes buscar usuarios por nombre o apellidos.
+        <br>Estos son usuarios que tienen el rol de "usuario" asignado, este es el rol por defecto al crear un usuario dentro del sistema.
+        <br>Se se registra un usuario desde el formulario de registro, este usuario tendrá el rol de "paciente" asignado por defecto.
+        <br>Para crear un nuevo usuario, haz clic en "Nuevo usuario" y rellena el formulario.
+    </div>
+    <input type="text" [(ngModel)]="filtro" (ngModelChange)="filtrarUsuarios()"
+        placeholder="Buscar pacientes o especialistas" class="form-control" />
+</div>
+
+<app-tabla-datos [datosTotales]="usuariosFiltrados" [columnas]="columnas" [templatesMap]="templatesMap"
+    [columnaOrden]="columnaOrden" [direccionOrdenAsc]="direccionOrdenAsc" [paginaActual]="paginaActual"
+    [itemsPorPagina]="itemsPorPagina" [maxPaginasVisibles]="maxPaginasVisibles" (ordenar)="ordenarPor($event)"
+    (cambiarPagina)="cambiarPagina($event)"></app-tabla-datos>
+
+<div *ngIf="loading" class="spinner">
+    <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Cargando...</span>
+    </div>
+</div>
+
+<!-- Templates para columnas especiales -->
+<ng-template #nombreTemplate let-usuario>
+    {{ usuario.nombre }} {{ usuario.apellidos }}
+</ng-template>
+
+<ng-template #accionesTemplate let-usuario>
+    <button class="btn btn-outline-primary btn-sm me-1" (click)="editarUsuario(usuario)">Editar</button>
+    <button class="btn btn-outline-danger btn-sm" (click)="confirmarEliminarUsuario(usuario)">Eliminar</button>
+</ng-template>
+<app-modal-edit-usuario *ngIf="modalVisible" [visible]="modalVisible" [esNuevo]="esNuevoUsuario"
+    [usuario]="usuarioSeleccionado" [erroresExternos]="erroresModal" (guardar)="guardarUsuario($event)"
+    (cerrar)="cerrarModal()">
+</app-modal-edit-usuario>

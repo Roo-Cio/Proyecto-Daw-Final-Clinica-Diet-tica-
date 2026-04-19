@@ -1,0 +1,32 @@
+<nav class="navbar navbar-expand navbar-light navbar-dinamica px-3">
+    <span class="navbar-brand mb-0 h1">Especialistas Dashboard</span>
+
+    <div class="navbar-nav me-auto">
+        <a routerLink="./citas" routerLinkActive="active" class="nav-link">Citas</a>
+        <a routerLink="./historiales" routerLinkActive="active" class="nav-link">Historiales</a>
+        <a routerLink="./documentos" routerLinkActive="active" class="nav-link" >Documentos</a>
+    </div>
+
+    <div class="usuario-navbar d-flex align-items-center justify-content-end">
+        <span *ngIf="usuario" class="me-3 d-flex align-items-center gap-2">
+            <div class="avatar-iniciales">
+                {{
+                usuario.nombre
+                ? (usuario.nombre[0] + (usuario.apellidos ? usuario.apellidos[0] : ''))
+                : ''
+                }}
+            </div>
+            <span class="nombre-usuario">
+                {{ usuario.nombre }} {{ usuario.apellidos || '' }}
+            </span>
+        </span>
+
+        <button class="btn btn-outline-danger" (click)="logout()">
+            <i class="bi bi-box-arrow-right"></i> Logout
+        </button>
+    </div>
+</nav>
+    
+<div class="p-3">
+    <router-outlet></router-outlet>
+</div>

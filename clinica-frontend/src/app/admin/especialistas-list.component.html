@@ -1,0 +1,54 @@
+<div class="mb-3">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="text-2xl font-bold mb-0">Listado de especialistas</h2>
+        <button class="btn btn-outline-primary" (click)="nuevoEspecialista()">Nuevo especialista</button>
+    </div>
+    <div class="alert alert-info small py-2">
+        <i class="bi bi-info-circle-fill me-1"></i>
+        Se muestra el listado de especialistas registrados en el sistema. Puedes buscar especialistas por nombre.
+        <br>Estos son usuarios que tienen el rol de "especialista" asignado.
+        <br>Para crear un nuevo especialista, haz clic en "Nuevo especialista" y asigna el rol de especialista a un usuario existente.
+    </div>
+    <input type="text" [(ngModel)]="filtro" (ngModelChange)="filtrarEspecialistas()"
+        placeholder="Buscar especialistas" class="form-control" />
+</div>
+
+<app-tabla-datos [columnas]="columnas" [templatesMap]="templatesMap" [columnaOrden]="columnaOrden"
+    [direccionOrdenAsc]="direccionOrdenAsc" [datosTotales]="especialistasFiltrados" [paginaActual]="paginaActual"
+    [itemsPorPagina]="itemsPorPagina" [maxPaginasVisibles]="maxPaginasVisibles" (ordenar)="ordenarPor($event)"
+    (cambiarPagina)="cambiarPagina($event)"></app-tabla-datos>
+
+<!-- Mensaje si no hay resultados por filtro -->
+<div *ngIf="!loading && especialistas.length > 0 && especialistasFiltrados.length === 0 && !huboError"
+    class="alert alert-info mt-3 text-center">
+    No hay especialistas que coincidan con el filtro aplicado.
+</div>
+
+<!-- Mensaje si no hay ningún especialista en la base de datos -->
+<div *ngIf="!loading && especialistas.length === 0 && !huboError" class="alert alert-warning mt-3 text-center">
+    No hay especialistas registrados actualmente.
+</div>
+
+<!-- Mensaje si hubo un error al cargar especialistas -->
+<div *ngIf="!loading && huboError" class="alert alert-danger mt-3 text-center">
+    Ocurrió un error al cargar los especialistas. Inténtalo nuevamente más tarde.
+</div>
+
+<div *ngIf="loading" class="text-center my-5">
+    <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Cargando...</span>
+    </div>
+</div>
+
+<ng-template #nombreTemplate let-especialista>
+    {{ especialista.nombre_apellidos }}
+</ng-template>
+
+<ng-template #accionesTemplate let-especialista>
+    <button (click)="confirmarDarDeBaja(especialista.user_id)" class="btn btn-outline-danger btn-sm">
+        Dar de baja
+    </button>
+</ng-template>
+
+<app-modal-nuevo-especialista *ngIf="modalVisible" (cerrado)="cerrarModal()"
+    (creado)="cargarEspecialistas()"></app-modal-nuevo-especialista>

@@ -1,0 +1,84 @@
+<div class="mb-3">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="text-2xl font-bold mb-0">Listado de pacientes</h2>
+        <button class="btn btn-outline-primary" (click)="abrirModalAsignarRolPaciente()" [disabled]="loading">Nuevo
+            paciente</button>
+    </div>
+    <div class="alert alert-info small py-2">
+        <i class="bi bi-info-circle-fill me-1"></i>
+        Se muestra el listado de pacientes registrados en el sistema. Puedes buscar pacientes por nombre, historial,
+        especialista, estado o comentario.
+        <br>Estos son usuarios que tienen el rol de "paciente" asignado.
+        <br>Para crear un nuevo paciente, haz clic en "Nuevo paciente" y asigna el rol de paciente a un usuario
+        existente.
+    </div>
+    <input type="text" [(ngModel)]="filtro" (ngModelChange)="onFiltroChange()"
+        placeholder="Buscar pacientes, historial, especialista, estado o comentario" class="form-control" />
+</div>
+
+<app-tabla-datos [datosTotales]="pacientesFiltrados" [columnas]="columnas" [templatesMap]="templatesMap"
+    [columnaOrden]="columnaOrden" [direccionOrdenAsc]="direccionOrdenAsc" [paginaActual]="paginaActual"
+    [itemsPorPagina]="itemsPorPagina" [maxPaginasVisibles]="maxPaginasVisibles" (ordenar)="ordenarPor($event)"
+    (cambiarPagina)="cambiarPagina($event)"></app-tabla-datos>
+
+<!-- Mensaje si no hay resultados por filtro -->
+<div *ngIf="!loading && pacientes.length > 0 && pacientesFiltrados.length === 0 && !huboError"
+    class="alert alert-info mt-3 text-center">
+    No hay pacientes que coincidan con el filtro aplicado.
+</div>
+
+<!-- Mensaje si no hay ningún paciente en la base de datos -->
+<div *ngIf="!loading && pacientes.length === 0 && !huboError" class="alert alert-warning mt-3 text-center">
+    No hay pacientes registrados actualmente.
+</div>
+
+<!-- Mensaje si hubo un error al cargar pacientes -->
+<div *ngIf="!loading && huboError" class="alert alert-danger mt-3 text-center">
+    Ocurrió un error al cargar los pacientes. Inténtalo nuevamente más tarde.
+</div>
+
+<div *ngIf="loading" class="text-center my-5">
+    <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Cargando...</span>
+    </div>
+</div>
+
+<!-- Templates de columnas -->
+<ng-template #nombrePacienteTemplate let-paciente>
+    {{ paciente.nombre_paciente }}
+</ng-template>
+
+<ng-template #numeroHistorialTemplate let-paciente>
+    {{ paciente.numero_historial || 'No asignado' }}
+</ng-template>
+
+<ng-template #fechaAltaTemplate let-paciente>
+    {{ paciente.fecha_alta ? formatearFecha(paciente.fecha_alta) : 'Sin fecha' }}
+</ng-template>
+
+<ng-template #estadoCitaTemplate let-paciente>
+    {{ paciente.ultima_cita?.estado ?? 'Sin cita' }}
+</ng-template>
+
+<ng-template #comentarioTemplate let-paciente>
+    {{ paciente.ultima_cita?.comentario ?? 'Sin comentario' }}
+</ng-template>
+
+<ng-template #nombreEspecialistaTemplate let-paciente>
+    {{ paciente.nombre_especialista }}
+</ng-template>
+
+<ng-template #especialidadTemplate let-paciente>
+    {{ paciente.ultima_cita?.especialista?.especialidad ?? 'Sin especialidad' }}
+</ng-template>
+
+<ng-template #accionesTemplate let-paciente>
+    <button class="btn btn-outline-danger btn-sm" (click)="cambiarRol(paciente)">
+        Dar de baja
+    </button>
+</ng-template>
+
+<!-- Modal para asignar rol Paciente a un usuario -->
+<app-modal-nuevo-paciente *ngIf="modalNuevoPacienteVisible" [visible]="true" [excluirUserIds]="idsUsuariosExcluidos"
+    (cerrar)="cerrarModalNuevoPaciente()" (pacienteCreado)="onPacienteCreado($event)">
+</app-modal-nuevo-paciente>

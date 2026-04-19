@@ -1,0 +1,48 @@
+.spinner {
+  margin-top: 20px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.tabla-datos {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabla-datos th, .tabla-datos td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: left;
+}
+
+.paginacion {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.btn-paginacion {
+  background-color: #007bff;
+  border: none;
+  color: white;
+  padding: 6px 12px;
+  margin: 0 2px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.btn-paginacion:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+.btn-paginacion:disabled {
+  background-color: #cccccc;
+  cursor: default;
+}
+
+.btn-paginacion.activa {
+  background-color: #0056b3;
+  font-weight: bold;
+  cursor: default;
+}

@@ -1,0 +1,14 @@
+server/**/secrets/*.env
+# Env y secretos
+*.env
+**/secrets/*
+!**/secrets/.env.example
+
+# Node/Laravel artefactos
+node_modules/
+vendor/
+storage/*.key
+
+# Ignorar archivos de vistas publicados
+!clinica-backend/resources/views/vendor/
+!clinica-backend/resources/views/vendor/l5-swagger/

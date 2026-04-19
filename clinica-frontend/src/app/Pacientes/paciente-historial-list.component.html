@@ -1,0 +1,67 @@
+<h2 class="text-2xl font-bold mb-4">Mis Historiales</h2>
+<div class="alert alert-info small py-2">
+    <i class="bi bi-info-circle-fill me-1"></i>
+    Aquí puedes ver y gestionar tus historiales médicos. Puedes filtrar los historiales por especialista, fecha o texto.
+    <br>Utiliza los botones de exportación para descargar todos tus historiales en formato PDF o CSV.
+</div>
+
+<div class="d-flex align-items-center gap-2 mb-3">
+    <input type="text" class="form-control ms-3" placeholder="Buscar por especialista, fecha, etc."
+        [(ngModel)]="filtroTexto" (ngModelChange)="aplicarFiltros()" />
+    <div class="d-flex justify-content-between align-items-center mt-3">
+        <div class="d-flex gap-1">
+            <button class="btn btn-outline-danger" (click)="exportarTodosPDF()">
+                <i class="bi bi-filetype-pdf"></i> Exportar PDF
+            </button>
+            <button class="btn btn-outline-success" (click)="exportarTodosCSV()">
+                <i class="bi bi-file-earmark-spreadsheet"></i> Exportar CSV
+            </button>
+        </div>
+    </div>
+
+</div>
+<div class="alert alert-info small py-2">
+    <i class="bi bi-info-circle-fill me-1"></i>
+    Para exportar un historial debes seleccionarlo en la tabla haciendo clic en él.
+</div>
+
+<app-tabla-datos [datosTotales]="historialesFiltrados"
+    [columnas]="['fecha', 'especialistaNombre', 'especialidad', 'acciones']" [columnaOrden]="columnaOrden"
+    [direccionOrdenAsc]="direccionOrdenAsc" [paginaActual]="paginaActual" [itemsPorPagina]="itemsPorPagina"
+    [maxPaginasVisibles]="maxPaginasVisibles" [templatesMap]="{
+    especialistaNombre: especialistaTemplate,
+    especialidad: especialidadTemplate,
+    acciones: accionesTemplate
+    }" (ordenar)="ordenarPor($event)" (cambiarPagina)="cambiarPagina($event)">
+</app-tabla-datos>
+
+<div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Cargando...</span>
+    </div>
+</div>
+<div *ngIf="!loading && historialesFiltrados.length === 0" class="alert alert-info">
+    No tienes historiales registrados aún.
+</div>
+
+
+<app-modal-ver-historial-paciente *ngIf="modalVisible && historialSeleccionado" [visible]="modalVisible"
+    [historial]="historialSeleccionado" [color]="colorSistema" (cerrar)="cerrarModal()">
+</app-modal-ver-historial-paciente>
+
+<ng-template #especialistaTemplate let-h>
+    {{ h.especialista?.user?.nombre }} {{ h.especialista?.user?.apellidos }}
+</ng-template>
+
+<ng-template #especialidadTemplate let-h>
+    {{ h.especialista?.especialidad }}
+</ng-template>
+
+<!-- Plantilla para acciones -->
+<ng-template #accionesTemplate let-h>
+    <div class="d-flex gap-2">
+        <button class="btn btn-outline-primary btn-sm" (click)="verHistorial(h)">Ver</button>
+        <button class="btn btn-outline-danger btn-sm" (click)="exportarPDF(h)">PDF</button>
+        <button class="btn btn-outline-success btn-sm" (click)="exportarCSV(h)">CSV</button>
+    </div>
+</ng-template>
