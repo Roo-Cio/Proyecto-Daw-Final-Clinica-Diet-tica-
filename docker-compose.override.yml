@@ -1,4 +1,0 @@
-# Override para desarrollo local (se aplica automáticamente)
-# Este archivo sobreescribe lo que difiere del base docker-compose.yml
-# El despliegue local usa puertos directos, sin proxy inverso
-services: {}

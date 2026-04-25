@@ -142,7 +142,7 @@ Aquí reside toda la **lógica de negocio**, cuando recibe peticiones que requie
     - Gestión de roles y permisos (Spatie)
     - Manejo de datos clínicos y documentos
     - Comunicación con colas y base de datos
-- Dominio: `https://api.clinicamv.lol`
+
 
 #### PHP (PHP-FPM – Worker Principal)
 Este servicio ejecuta los procesos PHP del backend, incluyendo **Artisan, migraciones, seeders, y tareas síncronas**.

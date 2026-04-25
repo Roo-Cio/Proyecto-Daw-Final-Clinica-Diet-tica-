@@ -22,7 +22,6 @@ Consume la **API REST** de Laravel (Sanctum) y utiliza **Bootstrap 5**, **FullCa
 
 ## Requisitos
 - **Node.js 20+** y **npm** (para modo local).
-- Acceso a la **API** (`https://api.clinicamv.lol` en prod) con CORS configurado.
 
 ## Arranque rápido
 Podemos arrancar el servicio de forma local de dos formas, mediante Contenedores (Docker) o sin contenedores. Vamos a explicar las dos formas:
@@ -53,8 +52,6 @@ docker compose up -d
 ```bash
 docker compose down
 ```
-
->**Importante**: el frontend llama a la API por ``environment.apiBase``. En producción debería ser ``https://api.clinicamv.lol``. Asegúrate de que `**CORS** en el backend permite el origen (ver sección de CORS en el README).
 
 ### Modo local (sin Docker)
 Útil para desarrollo rápido con HMR.
@@ -99,16 +96,7 @@ Define el endpoint de la API y ajustes de entorno:
 ```ts
 export const environment = {
   production: false,
-  apiBase: 'http://localhost:8000', // o https://api.clinicamv.lol si usas túnel/cert
-  colorTemaFallback: '#28a745'
-};
-```
-
-`src/environments/environment.prod.ts`
-```ts
-export const environment = {
-  production: true,
-  apiBase: 'https://api.clinicamv.lol',
+  apiBase: 'http://localhost:8000', 
   colorTemaFallback: '#28a745'
 };
 ```

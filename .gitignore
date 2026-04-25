@@ -12,3 +12,4 @@ storage/*.key
 # Ignorar archivos de vistas publicados
 !clinica-backend/resources/views/vendor/
 !clinica-backend/resources/views/vendor/l5-swagger/
+venv
